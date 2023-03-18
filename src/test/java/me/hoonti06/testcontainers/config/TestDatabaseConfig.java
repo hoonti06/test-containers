@@ -12,7 +12,7 @@ import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @Profile("test")
-@TestConfiguration
+//@TestConfiguration
 public class TestDatabaseConfig {
 
   @Bean
