@@ -36,4 +36,9 @@ class MemberRepositoryTest {
     assertThat(findMember.getId()).isEqualTo(member.getId());
   }
 
+
+  @Test
+  void wrongSql() {
+    memberRepository.wrongSql();
+  }
 }

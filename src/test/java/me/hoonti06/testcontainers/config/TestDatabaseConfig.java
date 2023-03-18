@@ -70,4 +70,9 @@ public class TestDatabaseConfig {
     return transactionManager;
   }
 
+//  @Bean
+//  public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+//    return new PersistenceExceptionTranslationPostProcessor();
+//  }
+
 }
