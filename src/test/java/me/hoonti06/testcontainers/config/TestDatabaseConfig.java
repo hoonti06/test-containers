@@ -2,13 +2,17 @@ package me.hoonti06.testcontainers.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import java.util.Properties;
 import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.utility.DockerImageName;
@@ -45,8 +49,35 @@ public class TestDatabaseConfig {
   }
 
   @Bean
+  @DependsOn("dataSource")
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+    LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+    emf.setDataSource(dataSource);
+    emf.setPackagesToScan("me.hoonti06.testcontainers.entity");
+    emf.setJpaVendorAdapter(jpaVendorAdapters());
+    emf.setJpaProperties(jpaProperties());
+    return emf;
+  }
+
+  @Bean
+  @DependsOn("dataSource")
   public PlatformTransactionManager transactionManager(DataSource dataSource) {
-    return new DataSourceTransactionManager(dataSource);
+    JpaTransactionManager transactionManager = new JpaTransactionManager();
+    transactionManager.setEntityManagerFactory(entityManagerFactory(dataSource).getObject());
+    return transactionManager;
+  }
+
+  private JpaVendorAdapter jpaVendorAdapters() {
+    return new HibernateJpaVendorAdapter();
+  }
+
+  private Properties jpaProperties() {
+    Properties jpaProperties = new Properties();
+    jpaProperties.setProperty("hibernate.show_sql", "true");
+    jpaProperties.setProperty("hibernate.format_sql", "true");
+    jpaProperties.setProperty("hibernate.hbm2ddl.auto", "none");
+    jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MariaDB106Dialect");
+    return jpaProperties;
   }
 
 }
