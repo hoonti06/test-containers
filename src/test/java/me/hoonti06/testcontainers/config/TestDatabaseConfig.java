@@ -9,22 +9,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.testcontainers.containers.MariaDBContainer;
-import org.testcontainers.utility.DockerImageName;
 
 @Profile("test")
 @TestConfiguration
 public class TestDatabaseConfig {
 
   @Bean
-  public MariaDBContainer mariaDbContainer() {
-    final MariaDBContainer mariaDbContainer = new MariaDBContainer(DockerImageName.parse("mariadb:10.6"));
+  public MariaDBContainer<?> mariaDbContainer() {
+    final MariaDBContainer<?> mariaDbContainer = new MariaDBContainer<>("mariadb:10.6");
     mariaDbContainer.start();
     return mariaDbContainer;
   }
 
   @Bean
   @DependsOn("mariaDbContainer")
-  public HikariDataSource dataSource(MariaDBContainer mariaDbContainer) {
+  public HikariDataSource dataSource(MariaDBContainer<?> mariaDbContainer) {
     HikariConfig config = new HikariConfig();
     config.setJdbcUrl(mariaDbContainer.getJdbcUrl());
     config.setUsername(mariaDbContainer.getUsername());
