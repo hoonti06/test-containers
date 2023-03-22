@@ -77,6 +77,8 @@ public class TestDatabaseConfig {
     jpaProperties.setProperty("hibernate.format_sql", "true");
     jpaProperties.setProperty("hibernate.hbm2ddl.auto", "create");
     jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MariaDB106Dialect");
+    jpaProperties.setProperty("hibernate.physical_naming_strategy",
+        "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
     return jpaProperties;
   }
 
