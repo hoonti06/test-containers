@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.Properties;
 import javax.sql.DataSource;
-import org.flywaydb.core.Flyway;
+//import org.flywaydb.core.Flyway;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
@@ -41,11 +41,11 @@ public class TestDatabaseConfig {
   }
 
   private void initSchema(DataSource dataSource) {
-    Flyway flyway = Flyway
-        .configure()
-        .dataSource(dataSource)
-        .load();
-    flyway.migrate();
+//    Flyway flyway = Flyway
+//        .configure()
+//        .dataSource(dataSource)
+//        .load();
+//    flyway.migrate();
   }
 
   @Bean
@@ -75,7 +75,7 @@ public class TestDatabaseConfig {
     Properties jpaProperties = new Properties();
     jpaProperties.setProperty("hibernate.show_sql", "true");
     jpaProperties.setProperty("hibernate.format_sql", "true");
-    jpaProperties.setProperty("hibernate.hbm2ddl.auto", "none");
+    jpaProperties.setProperty("hibernate.hbm2ddl.auto", "create");
     jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MariaDB106Dialect");
     return jpaProperties;
   }
